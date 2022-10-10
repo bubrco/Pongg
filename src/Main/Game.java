@@ -9,42 +9,38 @@ import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.image.BufferStrategy;
+
 import javax.swing.JFrame;
+
 import Entities.*;
 
 
 public class Game extends Canvas implements Runnable, KeyListener, MouseListener{
-		
-		
-		/**
-	 * 
-	 */
 		private static final long serialVersionUID = 1L;
-		public static int WHIDTH = 620, HEIGHT = 480;
+		public static int WIDTH = 620, HEIGHT = 480;
 		public static Player player;
-		public static Bola bola;
+		public static Bola ball;
 		public static Player2 enemy;
 		public static UI ui;
 		public static int pointsP = 0;
 		public static int pointsE = 0;
 		public static int rectx;
+		static String placar = Game.pointsP+" - "+Game.pointsE;
 		public static final String name = "PONG 3.0";
 		public static JFrame frame;
 		public static Point loc;
+		private static Game game;
 		
-		static String placar = Game.pointsP+" - "+Game.pointsE;
-
-		
+	
 		public Game() {
 			this.addKeyListener(this);
 			this.addMouseListener(this);
-			this.setPreferredSize(new Dimension(WHIDTH,HEIGHT));
+			this.setPreferredSize(new Dimension(WIDTH,HEIGHT));
+			
 			ui = new UI();
 			player = new Player(0,HEIGHT/2-(60/2), 22, 60);
-			enemy = new Player2(WHIDTH-22,HEIGHT/2-(60/2),22,60);
-			bola = new Bola(WHIDTH/2,HEIGHT/2,22,22);
-			ui.icon();
-		
+			enemy = new Player2(WIDTH-22,HEIGHT/2-(60/2),22,60);
+			ball = new Bola(WIDTH/2,HEIGHT/2,22,22);
 		}
 		
 		
@@ -52,9 +48,8 @@ public class Game extends Canvas implements Runnable, KeyListener, MouseListener
 			if(ui.startGame == true) {
 				player.tick();
 				enemy.tick();
-				bola.tick();
-			}else {}
-			
+				ball.tick();
+			}
 			ui.tick();
 		}
 		
@@ -67,38 +62,39 @@ public class Game extends Canvas implements Runnable, KeyListener, MouseListener
 			}
 			
 			Graphics g = bs.getDrawGraphics();
-			//background
+			
+			
+			rectx = WIDTH/2-((36/2)*placar.length()/2);
+			
 			g.setColor(Color.black);
-			g.fillRect(0, 0, WHIDTH,HEIGHT);
+			g.fillRect(0,0,WIDTH,HEIGHT);
+			//g.drawImage(ui.bg,0,0,null);
 			
-			rectx = WHIDTH/2-((36/2)*placar.length()/2);
-			
-			
-			
-			
-		
 			
 			if(ui.startGame == true) {
-			
-			player.render(g);
-			enemy.render(g);
-			bola.render(g);
-			
+				player.render(g);
+				enemy.render(g);
+				ball.render(g);
 			}
+			
 			ui.render(g);
+			
 			g.dispose();
 			bs.show();
 				
 		}
 		
 		public static void main(String[] args) {
-			Game game = new Game();
-			JFrame frame = new JFrame();
-				
-				
+			game = new Game();
+			new Thread(game).start();
+		}
+
+		private static void initFrame() {
+				//Game game = new Game();
+				JFrame frame = new JFrame();
 				frame.add(game);
 				frame.setTitle(name);
-				frame.setIconImage(ui.icon);  
+				frame.setIconImage(UI.icon);  
 				
 				frame.pack();
 				frame.setResizable(false);
@@ -108,20 +104,15 @@ public class Game extends Canvas implements Runnable, KeyListener, MouseListener
 				frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 				frame.setVisible(true);
 				
-				
 				loc = frame.getLocation();
-				System.out.println("lesgo");
-	
-				
-				
-			new Thread(game).start();
+				System.out.println("Window");
 		}
-
-		
 
 
 		@Override
 		public void run() {
+			initFrame();
+			ui.initHoverHitboxes(loc);
 			requestFocus();
 				while(true) {
 					tick();
@@ -151,7 +142,7 @@ public class Game extends Canvas implements Runnable, KeyListener, MouseListener
 				
 			}
 			if(e.getKeyCode() == KeyEvent.VK_R) {
-				bola.restart();
+				ball.restart();
 			}
 			if(e.getKeyCode() == KeyEvent.VK_SPACE) {
 				ui.startGame = true;
@@ -195,17 +186,11 @@ public class Game extends Canvas implements Runnable, KeyListener, MouseListener
 
 		@Override
 		public void keyTyped(KeyEvent e) {
-			
-			
-			
-			
 		}
 		
 
 		@Override
 		public void mouseClicked(MouseEvent e) {
-			
-			
 		}
 
 
@@ -219,7 +204,7 @@ public class Game extends Canvas implements Runnable, KeyListener, MouseListener
 					ui.startGame = true;
 					player.reset();
 					enemy.reset();
-					bola.restart();
+					ball.restart();
 				}
 				
 				if(UI.hoverPause2 == true && ui.pause == true) {
@@ -245,8 +230,6 @@ public class Game extends Canvas implements Runnable, KeyListener, MouseListener
 
 		@Override
 		public void mouseReleased(MouseEvent e) {
-			
-			
 		}
 
 

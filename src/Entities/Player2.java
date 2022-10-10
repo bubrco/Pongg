@@ -59,12 +59,12 @@ public class Player2 extends Rectangle{
 				curDir = 0;
 			}
 			
-			if(Game.bola.x >= Game.WHIDTH-(200) && Game.bola.dx > 0 ) {			
-							if(y < Game.bola.y) {
-								if(Game.bola.y - y > 50-(height/2))
+			if(Game.ball.x >= Game.WIDTH-(200) && Game.ball.dx > 0 ) {			
+							if(y < Game.ball.y) {
+								if(Game.ball.y - y > 50-(height/2))
 								AIdown = true; AIup = false;
 							}else {
-								if(y - Game.bola.y  > 20-(height/2))
+								if(y - Game.ball.y  > 20-(height/2))
 								AIup = true; AIdown = false; 
 							}
 			}else {
@@ -88,24 +88,6 @@ public class Player2 extends Rectangle{
 				}
 				
 				
-				/*
-				i++;
-				if(i<20) {
-					if(AIup == true && y > 0) {
-						y-=spd - pause;
-					}else if(AIdown && y < 420){
-						y+=spd - pause;
-					}else {
-						if(y < rand) {
-							AIup = true; AIdown = false;
-							rand = r.nextInt(50,110);
-						}else{
-							AIdown = true; AIup = false;
-						}
-				
-						i=0;
-				}
-				*/
 			}
 			}
 		}
@@ -116,7 +98,7 @@ public class Player2 extends Rectangle{
 					
 			
 			
-			//y = (int) game.bola.getY()+rand;
+			//y = (int) game.ball.getY()+rand;
 			
 		
 	
@@ -129,6 +111,6 @@ public class Player2 extends Rectangle{
 	}
 	
 	public void reset() {
-		this.setLocation(Game.WHIDTH-width,Game.HEIGHT/2-(height/2));
+		this.setLocation(Game.WIDTH-width,Game.HEIGHT/2-(height/2));
 	}
 }

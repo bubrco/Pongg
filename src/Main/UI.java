@@ -4,7 +4,6 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.Graphics;
-import java.awt.Image;
 import java.awt.MouseInfo;
 import java.awt.Point;
 import java.awt.PointerInfo;
@@ -13,6 +12,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.IOException;
 
 import javax.imageio.ImageIO;
@@ -24,7 +25,7 @@ import javax.swing.JTextField;
 public class UI extends JFrame implements MouseListener, ActionListener{
 	
 	
-	/**
+	/*
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
@@ -54,19 +55,33 @@ public class UI extends JFrame implements MouseListener, ActionListener{
 	static Font font6;
 	static Font font7;
 	
-	Rectangle pause1HitBox;
-	Rectangle pause2HitBox;
+	Rectangle pause1HitBox,pause2HitBox,menu1HitBox,Menu2HitBox,settings1HitBox,settings2HitBox,settings3HitBox,settings4HitBox;
 	
 	JButton button;
 	JTextField textfield;
-	Image icon;
+	public static BufferedImage icon;
+	public static BufferedImage bg;
 	
-	public void icon() {
-			try {
-				icon = ImageIO.read(getClass().getResource("/ICON.png"));
-			} catch (IOException e) {
-				System.out.println("ero");
-			}
+	
+	public UI() {
+		try {
+			icon = ImageIO.read(getClass().getResource("/ICON.png"));
+		} catch (IOException e) {
+			System.out.println("Error on reading icon");
+		}
+	}
+	
+	public void initHoverHitboxes(Point windowPos) {
+		int X = (int) windowPos.getX();
+		int Y = (int) windowPos.getY();
+		pause1HitBox = new Rectangle(Game.WIDTH/2 -(int)(pause1.length()*7.0143)+X,(Game.HEIGHT/2-85)+Y+37,(int)(pause1.length()*7.0143)*2,30);
+		pause2HitBox = new Rectangle(Game.WIDTH/2 -(int)(pause2.length()*8.0143)+X,(Game.HEIGHT/2-55)+Y+37,(int)(pause2.length()*8.0143)*2,27);
+		menu1HitBox = new Rectangle(Game.WIDTH/2 - (int)(Bstart.length()*9.0843)+X,(Game.HEIGHT/2-36)+Y+37,(int)(Bstart.length()*9.0843)*2,32);
+		Menu2HitBox = new Rectangle(Game.WIDTH/2-(int)(Bsettings[0].length()*9.0843)+X,(Game.HEIGHT/2)+Y+37,(int)(Bsettings[0].length()*9.08)*2,32);
+		settings1HitBox = new Rectangle(Game.WIDTH/2-(int)(Bsettings[1].length()*9.0843)+X,(Game.HEIGHT/2-130)+Y+37,(int)(Bsettings[1].length()*9.08)*2,32);
+		settings2HitBox = new Rectangle(Game.WIDTH/2-(int)(Bsettings[2].length()*9.0843)+X,(Game.HEIGHT/2-72)+Y+37,(int)(Bsettings[2].length()*9.08)*2,32);
+		settings3HitBox = new Rectangle(Game.WIDTH/2-(int)(Bsettings[3].length()*9.0843)+X,(Game.HEIGHT/2-30)+Y+37,(int)(Bsettings[3].length()*9.08)*2,32);
+		settings4HitBox = new Rectangle(Game.WIDTH/2-(int)(Bsettings[4].length()*9.0843)+X,(Game.HEIGHT/2)+Y+37,(int)(Bsettings[4].length()*9.08)*2,32);
 	}
 	
 	public void restartP() {
@@ -76,10 +91,13 @@ public class UI extends JFrame implements MouseListener, ActionListener{
 	 
 	public void render(Graphics g) {
 		size = 36;
+		
+		//background
 		g.setColor(Color.white);
 		
-		//g.fillRect(game.WHIDTH/2 -(int)(pause1.length()*7.0143),(game.HEIGHT/2-80),(int)(pause1.length()*7.0143)*2,23);
-		//g.fillRect(game.WHIDTH/2 -(int)(pause2.length()*8.0143),(game.HEIGHT/2-47),(int)(pause2.length()*8.0143)*2,23);
+		//g.fillRect(Game.WIDTH/2 -(int)(pause1.length()*7.0143),(Game.HEIGHT/2-80),(int)(pause1.length()*7.0143)*2,23);
+		//g.fillRect(Game.WIDTH/2 -(int)(pause2.length()*8.0143),(Game.HEIGHT/2-47),(int)(pause2.length()*8.0143)*2,23);
+		
 		if(startGame == false) {
 			
 			//settings
@@ -87,26 +105,26 @@ public class UI extends JFrame implements MouseListener, ActionListener{
 				hoverMenu1 = false;
 				hoverMenu2 = false;
 				g.setFont(Ftitle);
-				g.drawString(Game.name,Game.WHIDTH/2- (int)(Game.name.length()*10.9843),Game.HEIGHT/2-170);
+				g.drawString(Game.name,Game.WIDTH/2- (int)(Game.name.length()*10.9843),Game.HEIGHT/2-170);
 				
 				g.setFont(new Font(font1.getFontName(),font1.getStyle(),font1.getSize()+6));
-				g.drawString(Bsettings[1],Game.WHIDTH/2- (int)(Bsettings[1].length()*9.0843)-9,Game.HEIGHT/2-90);
+				g.drawString(Bsettings[1],Game.WIDTH/2- (int)(Bsettings[1].length()*9.0843)-9,Game.HEIGHT/2-90);
 				
 				g.setFont(font2);
-				g.drawString(Bsettings[2].replaceAll("X",String.valueOf(Game.bola.spd)),Game.WHIDTH/2- (int)(Bsettings[2].length()*9.0843),Game.HEIGHT/2-36);
+				g.drawString(Bsettings[2].replaceAll("X",String.valueOf(Game.ball.spd)),Game.WIDTH/2- (int)(Bsettings[2].length()*9.0843),Game.HEIGHT/2-36);
 				
 				g.setFont(font3);
-				g.drawString(Bsettings[3].replaceAll("X",String.valueOf(Game.player.spd)),Game.WHIDTH/2- (int)(Bsettings[3].length()*9.0843),Game.HEIGHT/2);
+				g.drawString(Bsettings[3].replaceAll("X",String.valueOf(Game.player.spd)),Game.WIDTH/2- (int)(Bsettings[3].length()*9.0843),Game.HEIGHT/2);
 				
 				g.setFont(font4);
-				g.drawString(Bsettings[4].replaceAll("X",String.valueOf(Game.enemy.spd)),Game.WHIDTH/2- (int)(Bsettings[4].length()*10.0843),Game.HEIGHT/2+36);
+				g.drawString(Bsettings[4].replaceAll("X",String.valueOf(Game.enemy.spd)),Game.WIDTH/2- (int)(Bsettings[4].length()*10.0843),Game.HEIGHT/2+36);
 			}else {
 				g.setFont(Ftitle);
-				g.drawString(Game.name,Game.WHIDTH/2- (int)(Game.name.length()*10.9843),Game.HEIGHT/2-100);
+				g.drawString(Game.name,Game.WIDTH/2- (int)(Game.name.length()*10.9843),Game.HEIGHT/2-100);
 				g.setFont(font1);
-				g.drawString(Bstart,Game.WHIDTH/2- (int)(Bstart.length()*9.0843),Game.HEIGHT/2);
+				g.drawString(Bstart,Game.WIDTH/2- (int)(Bstart.length()*9.0843),Game.HEIGHT/2);
 				g.setFont(font2);
-				g.drawString(Bsettings[0],Game.WHIDTH/2- (int)(Bsettings[0].length()*9.0843),Game.HEIGHT/2+36);
+				g.drawString(Bsettings[0],Game.WIDTH/2- (int)(Bsettings[0].length()*9.0843),Game.HEIGHT/2+36);
 				
 				
 			}
@@ -115,12 +133,12 @@ public class UI extends JFrame implements MouseListener, ActionListener{
 			
 			g.drawRect((int)Game.rectx,1,(36/2)*Game.placar.length(), 36);
 			
-			g.fillRect(0, 0,Game.WHIDTH,4);
-			g.fillRect(0, Game.HEIGHT-4,Game.WHIDTH,4);
+			g.fillRect(0, 0,Game.WIDTH,4);
+			g.fillRect(0, Game.HEIGHT-4,Game.WIDTH,4);
 			
 			
-			g.fillRect(Game.WHIDTH/2-2,37,1,Game.HEIGHT);
-			g.fillRect(Game.WHIDTH/2+2,37,1,Game.HEIGHT);
+			g.fillRect(Game.WIDTH/2-2,37,1,Game.HEIGHT);
+			g.fillRect(Game.WIDTH/2+2,37,1,Game.HEIGHT);
 			
 			
 			size = 26;
@@ -133,14 +151,14 @@ public class UI extends JFrame implements MouseListener, ActionListener{
 			
 			if(pause == true) {
 					g.setColor(new Color(20,20,20,99));
-					g.fillRect(0,0,Game.WHIDTH,Game.HEIGHT);
+					g.fillRect(0,0,Game.WIDTH,Game.HEIGHT);
 					g.setColor(Color.white);
 					
 					g.setFont(font3);
-					g.drawString(pause1,Game.WHIDTH/2- (int)(pause1.length()*7.0143),Game.HEIGHT/2-60);
+					g.drawString(pause1,Game.WIDTH/2- (int)(pause1.length()*7.0143),Game.HEIGHT/2-60);
 					
 					g.setFont(font4);
-					g.drawString(pause2,Game.WHIDTH/2- (int)(pause2.length()*8.0143),Game.HEIGHT/2-30);
+					g.drawString(pause2,Game.WIDTH/2- (int)(pause2.length()*8.0143),Game.HEIGHT/2-30);
 				}
 					
 		
@@ -166,45 +184,45 @@ public class UI extends JFrame implements MouseListener, ActionListener{
 		Bsettings[4] = "Enemy speed: X";
 	}
 	
-	public void mouseHover(String Button) {
+	public void telma() {
 		
+	}
+	
+	public void mouseHover(String Button) {
 		if(Button.equals("Bstart") && startGame == false && settings == false) {
 			font1 = new Font("Arial",Font.BOLD,size+10);
 			Bstart = "-start-  ";
 			hoverMenu1 = true;
-		}else if(Button.equals("Bsettings[0]") && startGame == false && settings == false){
+			return;
+		}
+		if(Button.equals("Bsettings[0]") && startGame == false && settings == false){
 			font2 = new Font("Arial",Font.BOLD,size+10);
 			Bsettings[0] = "-settings-  ";
 			hoverMenu2 = true;
-		}else if(settings == true) {
-			
-			
-				if(Button.equals("Bsettings[1]")) {
-					hoverSettings1 = true;
-					Bsettings[1] = "-back-  ";
-					font1 = new Font("Arial",Font.BOLD,size+10);
-
-				}else if(Button.equals("Bsettings[2]")) {
-					hoverSettings2 = true;
-					Bsettings[2] = "Ball speed: X ";
-					font2 = new Font("Arial",Font.BOLD,size+2);
-				}else if(Button.equals("Bsettings[3]")) {
-					hoverSettings3 = true;
-					Bsettings[3] = "Player speed: X ";
-					font3 = new Font("Arial",Font.BOLD,size+2);
-				}else if(Button.equals("Bsettings[4]")) {
-					hoverSettings4 = true;
-					Bsettings[4] = "Enemy speed: X ";
-					font4 = new Font("Arial",Font.BOLD,size+2);
-				}
-		} 
+		}
 		
+		if(settings == false) return;
+			
+		if(Button.equals("Bsettings[1]")) {
+			hoverSettings1 = true;
+			Bsettings[1] = "-back-  ";
+			font1 = new Font("Arial",Font.BOLD,size+10);
+		}else if(Button.equals("Bsettings[2]")) {
+			hoverSettings2 = true;
+			Bsettings[2] = "Ball speed: X ";
+			font2 = new Font("Arial",Font.BOLD,size+2);
+		}else if(Button.equals("Bsettings[3]")) {
+			hoverSettings3 = true;
+			Bsettings[3] = "Player speed: X ";
+			font3 = new Font("Arial",Font.BOLD,size+2);
+		}else if(Button.equals("Bsettings[4]")) {
+			hoverSettings4 = true;
+			Bsettings[4] = "Enemy speed: X ";
+			font4 = new Font("Arial",Font.BOLD,size+2);
+		}
 		
 	}
 	
-	public void restartGame(String a) {
-		
-	}
 	
 	public void Frame(String name){
 		if(this.isShowing() == true || this.isVisible() ) {
@@ -217,6 +235,8 @@ public class UI extends JFrame implements MouseListener, ActionListener{
 		this.setName(name);
 		curB = name;
 		
+		
+	    
 		
 		button = new JButton("Submit");
 		button.addActionListener(this);
@@ -235,9 +255,9 @@ public class UI extends JFrame implements MouseListener, ActionListener{
 	private void setter(int I) {
 		if(curB.equals("Set ball speed")) {
 			if(I > 12) {
-				Game.bola.spd = 11;
+				Game.ball.spd = 11;
 			}else 
-			Game.bola.spd = I;
+			Game.ball.spd = I;
 		}else if(curB.equals("Set player speed")){
 			if(I > 12) {
 				Game.player.spd = 11;
@@ -272,19 +292,19 @@ public class UI extends JFrame implements MouseListener, ActionListener{
 		
 		PointerInfo a = MouseInfo.getPointerInfo();
 		Point b = a.getLocation();
-		int x = (int) b.getX();
-		int y = (int) b.getY();
-		int X = (int) Game.loc.getX();
-		int Y = (int) Game.loc.getY();
+		//int x = (int) b.getX();
+		///int y = (int) b.getY();
+		//int X = (int) Game.loc.getX();
+		//int Y = (int) Game.loc.getY();
 		hoverMenu1 = false; hoverMenu2 = false; 
 		hoverSettings1 = false; hoverSettings2 = false; hoverSettings3 = false; hoverSettings4 = false;
 		hoverPause2 = false;
 		
 		//hitboxses
-		pause1HitBox = new Rectangle(Game.WHIDTH/2 -(int)(pause1.length()*7.0143)+X,(Game.HEIGHT/2-85)+Y+37,(int)(pause1.length()*7.0143)*2,30);
-		pause2HitBox = new Rectangle(Game.WHIDTH/2 -(int)(pause2.length()*8.0143)+X,(Game.HEIGHT/2-55)+Y+37,(int)(pause2.length()*8.0143)*2,27);
+		//pause1HitBox = new Rectangle(Game.WIDTH/2 -(int)(pause1.length()*7.0143)+X,(Game.HEIGHT/2-85)+Y+37,(int)(pause1.length()*7.0143)*2,30);
+		//pause2HitBox = new Rectangle(Game.WIDTH/2 -(int)(pause2.length()*8.0143)+X,(Game.HEIGHT/2-55)+Y+37,(int)(pause2.length()*8.0143)*2,27);
 		
-		
+		//CHECK HOVER
 		if(pause1HitBox.contains(b) && pause && startGame) {
 			font3 = new Font("Arial",Font.BOLD,size+5);
 			pause1 = "-resume-  ";
@@ -296,43 +316,69 @@ public class UI extends JFrame implements MouseListener, ActionListener{
 			pause2 = "-menu- ";
 			hoverPause2 = true;
 		}
+
+		if(menu1HitBox.contains(b) &&!startGame) {
+			mouseHover("Bstart");
+			hoverMenu1 = true;
+		}else
+		if(Menu2HitBox.contains(b) &&!startGame) {
+			mouseHover("Bsettings[0]");
+			hoverMenu2 = true;
+		}
 		
+		if(settings1HitBox.contains(b) && settings && !startGame) {
+			mouseHover("Bsettings[1]");
+			hoverSettings1 = true;
+		}else
+		if(settings2HitBox.contains(b) && settings && !startGame) {
+			mouseHover("Bsettings[2]");
+			hoverSettings2 = true;
+		}else
+		if(settings3HitBox.contains(b) && settings && !startGame) {
+			mouseHover("Bsettings[3]");
+			hoverSettings3 = true;
+		}else
+		if(settings4HitBox.contains(b) && settings && !startGame) {
+			mouseHover("Bsettings[4]");
+			hoverSettings4 = true;
+		}
 		
-		if(!settings && !startGame && x > (Game.WHIDTH/2 - (int)(Bstart.length()*9.0843))+X &&
-				x < ((Game.WHIDTH/2 - (int)(Bstart.length()*9.0843)+Bstart.length()*9.0843*1.70843))+X &&
+		/*
+		if(!settings && !startGame && x > (Game.WIDTH/2 - (int)(Bstart.length()*9.0843))+X &&
+				x < ((Game.WIDTH/2 - (int)(Bstart.length()*9.0843)+Bstart.length()*9.0843*1.70843))+X &&
 				y > Game.HEIGHT/2-36+Y+37 &&
 				y < Game.HEIGHT/2+Y+37){
 			mouseHover("Bstart");
 			hoverMenu1 = true;
-		}else if(!settings && !startGame && x > (Game.WHIDTH/2 - (int)(Bsettings[0].length()*9.0843))+X &&
-				x < ((Game.WHIDTH/2 - (int)(Bsettings[0].length()*9.0843)+Bsettings[0].length()*9.0843*1.70843))+X &&
+		}else if(!settings && !startGame && x > (Game.WIDTH/2 - (int)(Bsettings[0].length()*9.0843))+X &&
+				x < ((Game.WIDTH/2 - (int)(Bsettings[0].length()*9.0843)+Bsettings[0].length()*9.0843*1.70843))+X &&
 				y > Game.HEIGHT/2+Y+37 &&
 				y < Game.HEIGHT/2+Y+37+36) {
 			
 			mouseHover("Bsettings[0]");
 			hoverMenu2 = true;
 		}else if ( settings == true && !startGame) {
-			if(x > (Game.WHIDTH/2 - (int)(Bsettings[1].length()*9.0843))+X &&
-				x <= ((Game.WHIDTH/2 - (int)(Bsettings[1].length()*9.0843)+Bsettings[1].length()*9.0843*2.0843))+X &&
+			if(x > (Game.WIDTH/2 - (int)(Bsettings[1].length()*9.0843))+X &&
+				x <= ((Game.WIDTH/2 - (int)(Bsettings[1].length()*9.0843)+Bsettings[1].length()*9.0843*2.0843))+X &&
 				y > Game.HEIGHT/2-76+Y+37-60 &&
 				y < Game.HEIGHT/2-76+Y+37-20) {
 				
 				mouseHover("Bsettings[1]");
 				hoverSettings1 = true;
-			}else if(x > (Game.WHIDTH/2 - (int)(Bsettings[2].length()*9.0843))+X &&
-					x <= ((Game.WHIDTH/2 - (int)(Bsettings[2].length()*9.0843)+Bsettings[2].length()*9.0843*2.0843))+X &&
+			}else if(x > (Game.WIDTH/2 - (int)(Bsettings[2].length()*9.0843))+X &&
+					x <= ((Game.WIDTH/2 - (int)(Bsettings[2].length()*9.0843)+Bsettings[2].length()*9.0843*2.0843))+X &&
 					y > Game.HEIGHT/2-76+Y+37 &&
 					y < Game.HEIGHT/2-38+Y+37 ) {
 				mouseHover("Bsettings[2]");
 				hoverSettings2 = true;
-			}else if(x > (Game.WHIDTH/2 - (int)(Bsettings[3].length()*9.0843))+X &&
-					x < ((Game.WHIDTH/2 - (int)(Bsettings[3].length()*9.0843)+Bsettings[3].length()*9.0843*2.0843))+X &&
+			}else if(x > (Game.WIDTH/2 - (int)(Bsettings[3].length()*9.0843))+X &&
+					x < ((Game.WIDTH/2 - (int)(Bsettings[3].length()*9.0843)+Bsettings[3].length()*9.0843*2.0843))+X &&
 					y > (Game.HEIGHT/2)+Y+37-36 &&
 					y < (Game.HEIGHT/2)+Y+37 ) {
 				mouseHover("Bsettings[3]");
 				hoverSettings3 = true;
-			}else if(x > (Game.WHIDTH/2 - (int)(Bsettings[4].length()*9.0843))+X &&
-					x < ((Game.WHIDTH/2 - (int)(Bsettings[4].length()*9.0843)+Bsettings[4].length()*9.0843*2.0843))+X &&
+			}else if(x > (Game.WIDTH/2 - (int)(Bsettings[4].length()*9.0843))+X &&
+					x < ((Game.WIDTH/2 - (int)(Bsettings[4].length()*9.0843)+Bsettings[4].length()*9.0843*2.0843))+X &&
 					y > (Game.HEIGHT/2)+Y+37 &&
 					y < (Game.HEIGHT/2)+Y+37+36 ) {
 				mouseHover("Bsettings[4]");
@@ -340,11 +386,11 @@ public class UI extends JFrame implements MouseListener, ActionListener{
 			}
 			
 			
-		
+			
 		}
-		/*
-		if(pause == true && x > (game.WHIDTH/2- (int)(pause1.length()*7.0143)+X) &&
-				x <= (game.WHIDTH/2- (int)(pause1.length()*7.0143))+pause1.length()*7.0843*2.0843+X &&
+		
+		if(pause == true && x > (game.WIDTH/2- (int)(pause1.length()*7.0143)+X) &&
+				x <= (game.WIDTH/2- (int)(pause1.length()*7.0143))+pause1.length()*7.0843*2.0843+X &&
 				y > game.HEIGHT/2+72-36+Y &&
 				y < game.HEIGHT/2+72-36+Y+36) {
 			
